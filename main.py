@@ -3,22 +3,27 @@ class Pet:
         self.name = name
         self.species = species
         self.owner = owner  
+    
     def __str__(self):
         return f"{self.name} ({self.species}) - Owner: {self.owner.username if self.owner else 'No owner'}"
+
 class User:
     def __init__(self, username, password):
         self.username = username
         self.password = password
         self.pets = []  
+    
     def add_pet(self, pet):
         self.pets.append(pet)
         pet.owner = self  
+    
     def remove_pet(self, pet):
         if pet in self.pets:
             self.pets.remove(pet)
             pet.owner = None  
         else:
             print(f"{self.username} không sở hữu thú cưng này.")
+    
     def list_pets(self):
         if not self.pets:
             print(f"{self.username} không có thú cưng nào.")
@@ -26,6 +31,7 @@ class User:
             print(f"{self.username}'s Pets:")
             for pet in self.pets:
                 print(f"  - {pet}")
+
 class Manager:
     def __init__(self):
         self.users = []  
@@ -33,6 +39,8 @@ class Manager:
         self.logged_in_user = None  
         self.admin_username = "admin"  
         self.admin_password = "123"   
+        self.pet_fund_balance = 0  # Track the total pet fund balance
+    
     def register_user(self):
         username = input("Nhập tên người dùng: ")
         password = input("Nhập mật khẩu: ")
@@ -43,6 +51,7 @@ class Manager:
         self.users.append(user)
         print(f"Đăng ký người dùng {username} thành công.")
         return user
+    
     def login_user(self):
         username = input("Nhập tên người dùng: ")
         password = input("Nhập mật khẩu: ")
@@ -54,6 +63,7 @@ class Manager:
         else:
             print("Tên người dùng hoặc mật khẩu không đúng.")
             return None
+    
     def login_admin(self):
         username = input("Nhập tài khoản quản trị viên: ")
         password = input("Nhập mật khẩu quản trị viên: ")
@@ -64,7 +74,7 @@ class Manager:
         else:
             print("Tài khoản hoặc mật khẩu quản trị viên không đúng.")
             return False
-
+    
     def find_user(self, username):
         for user in self.users:
             if user.username == username:
@@ -101,7 +111,7 @@ class Manager:
     def add_new_pet(self):
         if not self.logged_in_user:
             print("Vui lòng đăng nhập để thêm thú cưng.")
-            returni
+            return
         name = input("Nhập tên thú cưng: ")
         species = input("Nhập loài thú cưng: ")
         new_pet = Pet(name, species)
@@ -115,6 +125,19 @@ class Manager:
             print("Danh sách người dùng:")
             for user in self.users:
                 print(f"  - {user.username}")
+    
+    def donate_to_fund(self, amount):
+        if not self.logged_in_user:
+            print("Vui lòng đăng nhập trước khi đóng góp quỹ.")
+            return
+        if amount <= 0:
+            print("Số tiền đóng góp phải lớn hơn 0.")
+            return
+        self.pet_fund_balance += amount
+        print(f"{self.logged_in_user.username} đã đóng góp {amount} vào quỹ thú cưng.")
+
+    def view_fund_balance(self):
+        print(f"Quỹ thú cưng hiện tại có {self.pet_fund_balance} tiền.")
 manager = Manager()
 while True:
     choice = input("Chọn một hành động:\n1. Đăng ký\n2. Đăng nhập\n3. Đăng nhập với tư cách quản trị viên\n4. Thoát\nNhập lựa chọn: ")
@@ -131,9 +154,10 @@ while True:
         break
     else:
         print("Lựa chọn không hợp lệ. Vui lòng chọn lại.")
+
 if manager.logged_in_user:
     while True:
-        action = input(f"\nChào mừng {manager.logged_in_user.username}!\nChọn hành động:\n1. Thêm thú cưng\n2. Xem thú cưng\n3. Cho đi thú cưng\n4. Thoát\nNhập lựa chọn: ")
+        action = input(f"\nChào mừng {manager.logged_in_user.username}!\nChọn hành động:\n1. Thêm thú cưng\n2. Xem thú cưng\n3. Cho đi thú cưng\n4. Đóng góp quỹ\n5. Xem số dư quỹ\n6. Thoát\nNhập lựa chọn: ")
         if action == '1':
             manager.add_new_pet()  # Thêm thú cưng mới
         elif action == '2':
@@ -142,13 +166,16 @@ if manager.logged_in_user:
             pet_name = input("Nhập tên thú cưng bạn muốn cho đi: ")
             manager.give_away_pet(manager.logged_in_user.username, pet_name)  # Cho đi thú cưng
         elif action == '4':
+            amount = float(input("Nhập số tiền bạn muốn đóng góp vào quỹ: "))
+            manager.donate_to_fund(amount)  # Đóng góp vào quỹ
+        elif action == '5':
+            manager.view_fund_balance()  # Xem số dư quỹ
+        elif action == '6':
             print("Cảm ơn bạn đã sử dụng hệ thống.")
             break
         else:
             print("Lựa chọn không hợp lệ. Vui lòng chọn lại.")
-
 elif manager.logged_in_user is None:
-    
     if manager.login_admin():
         while True:
             admin_action = input("\nChọn hành động của quản trị viên:\n1. Xem danh sách người dùng\n2. Thoát\nNhập lựa chọn: ")
