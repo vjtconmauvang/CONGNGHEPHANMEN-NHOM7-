@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nhận thú cưng</title>
+</head>
+<body>
+    <h1>Nhận thú cưng</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="pet_id">Chọn thú cưng:</label>
+        <select name="pet_id" required>
+            {% for pet in pets %}
+                <option value="{{ pet.id }}">{{ pet.name }} ({{ pet.species }})</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Nhận thú cưng</button>
+    </form>
+</body>
+</html>

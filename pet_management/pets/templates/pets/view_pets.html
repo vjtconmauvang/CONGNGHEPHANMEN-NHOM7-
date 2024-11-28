@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Danh sách thú cưng</title>
+</head>
+<body>
+    <h1>Danh sách thú cưng của bạn</h1>
+    {% if pets %}
+        <ul>
+        {% for pet in pets %}
+            <li>{{ pet.name }} ({{ pet.species }})</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Bạn chưa có thú cưng nào.</p>
+    {% endif %}
+</body>
+</html>

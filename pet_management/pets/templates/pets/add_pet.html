@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Thêm thú cưng</title>
+</head>
+<body>
+    <h1>Thêm thú cưng</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="name">Tên thú cưng:</label>
+        <input type="text" id="name" name="name" required><br>
+        <label for="species">Loài thú cưng:</label>
+        <input type="text" id="species" name="species" required><br>
+        <button type="submit">Thêm thú cưng</button>
+    </form>
+</body>
+</html>
